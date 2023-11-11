@@ -34,12 +34,14 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.pets:
                         startActivity(new Intent(getApplicationContext(),Pets.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.home:
                         return true;
                     case R.id.community:
                         startActivity(new Intent(getApplicationContext(),Community.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                 }
                 return false;

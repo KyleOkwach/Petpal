@@ -221,23 +221,21 @@
                     android:background="@drawable/button_white_borderer">
 
                     <ImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/imageView8"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_weight="1"
                         android:baselineAlignBottom="false"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/textView8"
+                        app:layout_constraintEnd_toStartOf="@+id/textView9"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/google" />
 
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/textView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="170dp"
-                        android:layout_marginEnd="169dp"
                         android:fontFamily="@font/poppins_bold"
                         android:text="Sign in with Google"
                         android:textAlignment="center"

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family name="Poppins">
+    <font weight="400" style="normal" src="@font/poppins"/>
+</font-family>
