@@ -1,6 +1,6 @@
 package com.flow.petpal.Models;
 
-public class PetModel {
+public class PetModelDialog {
 
     // string course_name for storing course_name
     // and imgid for storing image id.
@@ -8,7 +8,7 @@ public class PetModel {
     private String pet_name;
     private int imgid;
 
-    public PetModel(int petID, String pet_name, int imgid) {
+    public PetModelDialog(int petID, String pet_name, int imgid) {
         this.petID = petID;
         this.pet_name = pet_name;
         this.imgid = imgid;

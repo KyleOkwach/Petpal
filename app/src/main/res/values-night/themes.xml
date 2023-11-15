@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Petpal" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Petpal.NightMode" parent="Base.Theme.Petpal">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="colorPrimary">@color/primary</item>

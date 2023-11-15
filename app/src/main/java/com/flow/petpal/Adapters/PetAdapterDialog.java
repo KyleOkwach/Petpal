@@ -1,8 +1,6 @@
 package com.flow.petpal.Adapters;
 
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -12,23 +10,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
-import com.flow.petpal.Activities.MainActivity;
 import com.flow.petpal.Activities.PetHome;
 import com.flow.petpal.Models.PetModel;
 import com.flow.petpal.R;
 
 import java.util.ArrayList;
 
-public class PetAdapter extends ArrayAdapter<PetModel> {
+public class PetAdapterDialog extends ArrayAdapter<PetModel> {
 
-    public PetAdapter(@NonNull Context context, ArrayList<PetModel> courseModelArrayList) {
+    public PetAdapterDialog(@NonNull Context context, ArrayList<PetModel> courseModelArrayList) {
         super(context, 0, courseModelArrayList);
     }
 

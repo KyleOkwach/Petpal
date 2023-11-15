@@ -22,7 +22,7 @@
             android:fontFamily="@font/poppins_bold"
             android:text="Create account"
             android:textColor="@color/secondary"
-            android:textSize="42dp"
+            android:textSize="34sp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -59,25 +59,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background_white"
+                    android:divider="@drawable/divider_small"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingLeft="7.5dp"
-                    android:paddingRight="7.5dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:showDividers="middle"
                     android:textAlignment="center">
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:baselineAlignBottom="false"
                         app:srcCompat="@drawable/user_outline" />
 
                     <EditText
                         android:id="@+id/usernameSignup"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_weight="1"
                         android:background="@null"
                         android:ems="10"
                         android:fontFamily="@font/poppins"
@@ -92,23 +92,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background_white"
+                    android:divider="@drawable/divider_small"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingLeft="7.5dp"
-                    android:paddingRight="7.5dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:showDividers="middle"
                     android:textAlignment="center">
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:baselineAlignBottom="false"
                         app:srcCompat="@drawable/email" />
 
                     <EditText
                         android:id="@+id/emailSignup"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:background="@null"
@@ -121,60 +122,86 @@
                         android:textSize="18sp" />
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/background_white"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingLeft="7.5dp"
-                    android:paddingRight="7.5dp"
-                    android:textAlignment="center">
+                    android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/imageView4"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_white"
+                        android:divider="@drawable/divider_small"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingLeft="14dp"
+                        android:paddingRight="14dp"
+                        android:showDividers="middle"
+                        android:textAlignment="center">
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:baselineAlignBottom="false"
+                            app:srcCompat="@drawable/padlock" />
+
+                        <EditText
+                            android:id="@+id/passwordSignup"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@null"
+                            android:ems="10"
+                            android:fontFamily="@font/poppins"
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:textColor="@color/accent"
+                            android:textColorHint="#7C9690" />
+
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/buttonShowPassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:baselineAlignBottom="false"
-                        app:srcCompat="@drawable/padlock" />
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="7.5dp"
+                        android:layout_weight="1">
 
-                    <EditText
-                        android:id="@+id/passwordSignup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:ems="10"
-                        android:fontFamily="@font/poppins"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/accent"
-                        android:textColorHint="#7C9690" />
-
-                </LinearLayout>
+                        <ImageView
+                            android:id="@+id/visibilityView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/visible" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background_white"
+                    android:divider="@drawable/divider_small"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingLeft="7.5dp"
-                    android:paddingRight="7.5dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:showDividers="middle"
                     android:textAlignment="center">
 
                     <ImageView
                         android:id="@+id/imageView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:baselineAlignBottom="false"
                         app:srcCompat="@drawable/padlock" />
 
                     <EditText
                         android:id="@+id/passwordConfirm"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:background="@null"
@@ -194,7 +221,7 @@
                     android:background="@drawable/button_basic">
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/buttonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
@@ -202,6 +229,17 @@
                         android:textAlignment="center"
                         android:textColor="@color/secondary"
                         android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ProgressBar
+                        android:id="@+id/loadSignUp"
+                        style="@android:style/Widget.Material.ProgressBar.Small.Title"
+                        android:layout_width="48sp"
+                        android:layout_height="48sp"
+                        android:progressTint="@color/secondary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

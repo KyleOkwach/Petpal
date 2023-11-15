@@ -2,6 +2,9 @@ package com.flow.petpal.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import android.view.View;
 import android.widget.GridView;
 import java.util.ArrayList;
 
@@ -16,10 +19,41 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.flow.petpal.R;
 public class Pets extends AppCompatActivity {
 
+    private ConstraintLayout buttonAddPet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pets);
+
+        buttonAddPet = findViewById(R.id.buttonAddPet);
+
+        buttonAddPet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Pets.this, PetForm.class));
+            }
+        });
+
+
+        // -----------------
+        // | PETS GRIDVIEW |
+        // -----------------
+
+        GridView petGV;
+
+        petGV = findViewById(R.id.idGVpets);
+        ArrayList<PetModel> petModelArrayList = new ArrayList<PetModel>();
+
+        petModelArrayList.add(new PetModel(1, "Toby", R.drawable.cat));
+        petModelArrayList.add(new PetModel(2, "Falco", R.drawable.bird));
+
+        PetAdapter adapter = new PetAdapter(this, petModelArrayList);
+        petGV.setAdapter(adapter);
+
+
+        // ---------------------
+        // | BOTTOM NAVIGATION |
+        // ---------------------
 
         // Initialize and assign variable
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
@@ -48,16 +82,5 @@ public class Pets extends AppCompatActivity {
                 return false;
             }
         });
-
-        GridView petGV;
-
-        petGV = findViewById(R.id.idGVpets);
-        ArrayList<PetModel> courseModelArrayList = new ArrayList<PetModel>();
-
-        courseModelArrayList.add(new PetModel("Toby", R.drawable.cat));
-        courseModelArrayList.add(new PetModel("Falco", R.drawable.bird));
-
-        PetAdapter adapter = new PetAdapter(this, courseModelArrayList);
-        petGV.setAdapter(adapter);
     }
 }
