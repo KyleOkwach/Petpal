@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="Plan health checkup"
+            android:text="Plan grooming"
             android:textSize="34sp"
             android:textStyle="bold" />
 
@@ -84,14 +84,14 @@
                 app:srcCompat="@drawable/calendar_outline" />
 
             <EditText
-                android:id="@+id/checkupDate"
+                android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:ems="10"
                 android:fontFamily="@font/poppins"
-                android:hint="Date"
+                android:hint="Day"
                 android:inputType="date"
                 android:textColor="@color/accent"
                 android:textColorHint="#7C9690"
@@ -114,17 +114,17 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:baselineAlignBottom="false"
-                app:srcCompat="@drawable/text_description_20_filled" />
+                app:srcCompat="@drawable/bowl_food" />
 
             <EditText
-                android:id="@+id/checkupDescription"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:ems="10"
                 android:fontFamily="@font/poppins"
-                android:hint="Description"
+                android:hint="Meal"
                 android:inputType="text"
                 android:textColor="@color/accent"
                 android:textColorHint="#7C9690"
@@ -132,7 +132,7 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/buttonAddCheckup"
+            android:id="@+id/buttonSetDate"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/button_basic">
@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Set checkup"
+                android:text="Set Date"
                 android:textAlignment="center"
                 android:textColor="@color/secondary"
                 android:textSize="18sp"
@@ -152,7 +152,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ProgressBar
-                android:id="@+id/submittingCheckup"
+                android:id="@+id/submitting"
                 style="@android:style/Widget.Material.ProgressBar.Small.Title"
                 android:layout_width="48sp"
                 android:layout_height="48sp"
@@ -174,7 +174,7 @@
             app:srcCompat="@drawable/line_horizontal" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/checkupRV"
+            android:id="@+id/activitiesRV"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

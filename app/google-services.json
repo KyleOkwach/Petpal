@@ -1,26 +1,45 @@
 {
   "project_info": {
     "project_number": "359412879965",
+    "firebase_url": "https://petpal-6eb78-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "petpal-6eb78",
-    "storage_bucket": "petpal-7d8b4.appspot.com"
+    "storage_bucket": "petpal-6eb78.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:718980577290:android:d68dba46b0cd8c834007f3",
+        "mobilesdk_app_id": "1:359412879965:android:cd97ac3e537a7f9a91b3b4",
         "android_client_info": {
           "package_name": "com.flow.petpal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "359412879965-6p3s77fsmnptd6jgtb8qbuv54hvi9ate.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flow.petpal",
+            "certificate_hash": "1a40d3ae09dfdb9b94f5ef247a4d18d3375fdcf0"
+          }
+        },
+        {
+          "client_id": "359412879965-oe41cdkraafu3j8ba6l700a8t3i48k7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAqCStp-_W1op56OMyk9qSxkPtj-CIzO5c"
+          "current_key": "AIzaSyDZ5YnhoHLSk_ffwMaRPfAJcrKG6s-78yg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359412879965-oe41cdkraafu3j8ba6l700a8t3i48k7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

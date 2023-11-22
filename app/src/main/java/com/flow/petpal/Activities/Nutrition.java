@@ -8,12 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,11 +20,9 @@ import android.widget.Toast;
 
 import com.flow.petpal.Adapters.EventAdapter;
 import com.flow.petpal.Models.EventModel;
+import com.flow.petpal.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import com.flow.petpal.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,8 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Community extends AppCompatActivity {
-
+public class Nutrition extends AppCompatActivity {
+    
     private ConstraintLayout buttonBack, buttonSetDate;
     private EditText activityDateET, activityDescriptionET;
     private ProgressBar submitting;
@@ -58,35 +54,7 @@ public class Community extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_community);
-
-        // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-
-        // Set Home selected
-        bottomNavigationView.setSelectedItemId(R.id.community);
-
-        // Perform item selected listener
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch(item.getItemId())
-                {
-                    case R.id.pets:
-                        startActivity(new Intent(getApplicationContext(),Pets.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.community:
-                        return true;
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
-            }
-        });
+        setContentView(R.layout.activity_nutrition);
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
@@ -95,6 +63,9 @@ public class Community extends AppCompatActivity {
 
         activityDateET = findViewById(R.id.date);
         activityDescriptionET = findViewById(R.id.description);
+        submitting = findViewById(R.id.submitting);
+        buttonSetDate = findViewById(R.id.buttonSetDate);
+        buttonBack = findViewById(R.id.buttonBack);
         activitiesRV = findViewById(R.id.activitiesRV);
 
         submitting.setVisibility(View.INVISIBLE);
@@ -107,8 +78,45 @@ public class Community extends AppCompatActivity {
             }
         });
 
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        buttonSetDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nutritionID, nutritionDate, nutritionDescription;
+                nutritionID = UUID.randomUUID().toString();
+                nutritionDate = activityDateET.getText().toString();
+                nutritionDescription = activityDescriptionET.getText().toString();
+                setnutritionDate(nutritionID, nutritionDate, nutritionDescription, petID);
+            }
+        });
+
         // Populate nutritions list
         shownutritionSchedule();
+    }
+
+    private void setnutritionDate(String nutritionID, String nutritionDate, String nutritionDescription, String petID) {
+        submitting.setVisibility(View.VISIBLE);
+
+        //
+        // PetModel pet = new PetModel(petID, petName, ownerID, uri.toString(), petDOB, petSpecies, petGender);
+        EventModel nutrition = new EventModel(nutritionID, nutritionDate, nutritionDescription, petID);
+        ref = db.getReference("Users");
+        ref.child(user.getUid()+"/Pets/"+petID+"/Nutrition/"+nutritionID).setValue(nutrition).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(Nutrition.this, "nutrition date set successfully", Toast.LENGTH_SHORT).show();
+                shownutritionSchedule();
+                activityDateET.setText("");
+                activityDescriptionET.setText("");
+            }
+        });
+
+        submitting.setVisibility(View.INVISIBLE);
     }
 
     private void shownutritionSchedule() {

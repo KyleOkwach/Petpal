@@ -5,7 +5,12 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +24,22 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.flow.petpal.Activities.MainActivity;
 import com.flow.petpal.Activities.PetHome;
 import com.flow.petpal.Models.PetModel;
 import com.flow.petpal.R;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class PetAdapter extends ArrayAdapter<PetModel> {
 
-    public PetAdapter(@NonNull Context context, ArrayList<PetModel> courseModelArrayList) {
-        super(context, 0, courseModelArrayList);
+    public PetAdapter(@NonNull Context context, ArrayList<PetModel> petModelArrayList) {
+        super(context, 0, petModelArrayList);
     }
 
     @NonNull
@@ -44,15 +54,24 @@ public class PetAdapter extends ArrayAdapter<PetModel> {
 
         PetModel petModel = getItem(position);
         TextView petTV = listitemView.findViewById(R.id.idTVPet);
+        TextView speciesTV = listitemView.findViewById(R.id.idTVSpecies);
         ImageView petIV = listitemView.findViewById(R.id.petImage);
         ConstraintLayout petLayout = listitemView.findViewById(R.id.petLayout);
 
         petTV.setText(petModel.getPet_name());
+        speciesTV.setText(petModel.getPetSpecies());
 
         // set background image
-        Drawable backgroundDrawable = ContextCompat.getDrawable(this.getContext(), petModel.getImgid());
-        petIV.setImageDrawable(backgroundDrawable);
-        // petLayout.setBackground(backgroundDrawable);
+        // Drawable backgroundDrawable = ContextCompat.getDrawable(this.getContext(), petModel.getImgid());
+
+        // petIV.setImageBitmap(getBitmapFromURL(petModel.getPetImageUri()));
+
+        Glide.with(this.getContext())
+                // .load(Uri.parse(petModel.getPetImageUri()))
+                .load(petModel.getPetImageUri())
+                .placeholder(R.drawable.image_broken)
+                .error(R.drawable.image_broken)
+                .into(petIV);
 
         listitemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +79,8 @@ public class PetAdapter extends ArrayAdapter<PetModel> {
                 Intent petIntent = new Intent(getContext(), PetHome.class);
                 petIntent.putExtra("ID", petModel.getPet_ID());
                 petIntent.putExtra("Name", petModel.getPet_name());
-                getContext().startActivity(petIntent);
+                petIntent.putExtra("PetModel", (Parcelable) petModel);
+                getContext().startActivity(petIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
 

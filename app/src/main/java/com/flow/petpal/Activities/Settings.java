@@ -3,6 +3,7 @@ package com.flow.petpal.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,8 +19,9 @@ public class Settings extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private TextView emailTV, usernameTV;
-    private ConstraintLayout buttonBack, buttonLogout;
+    private ConstraintLayout buttonBack, buttonLogout, buttonEditInformation;
     private LinearLayout buttonTheme;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,7 @@ public class Settings extends AppCompatActivity {
         buttonBack = findViewById(R.id.buttonBack);
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonTheme = findViewById(R.id.buttonTheme);
+        buttonEditInformation = findViewById(R.id.buttonEditInformation);
 
         // Load the theme preference
         SharedPreferences sharedPreferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
@@ -60,6 +63,13 @@ public class Settings extends AppCompatActivity {
                 } else {
                     setTheme(R.style.Base_Theme_Petpal);
                 }
+            }
+        });
+
+        buttonEditInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Settings.this, UserForm.class));
             }
         });
 
