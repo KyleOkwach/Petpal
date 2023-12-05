@@ -63,17 +63,30 @@
                     app:srcCompat="@drawable/baseline_plus" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <GridView
-                android:id="@+id/idGVpets"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:horizontalSpacing="6dp"
-                android:numColumns="2"
-                android:verticalSpacing="6dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+                android:layout_height="match_parent">
+
+                <ProgressBar
+                    android:id="@+id/progressBarPets"
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large.Inverse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="true" />
+
+                <GridView
+                    android:id="@+id/idGVpets"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:horizontalSpacing="6dp"
+                    android:numColumns="2"
+                    android:verticalSpacing="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </RelativeLayout>
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

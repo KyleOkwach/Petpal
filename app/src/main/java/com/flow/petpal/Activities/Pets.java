@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.flow.petpal.Adapters.PetAdapter;
 import com.flow.petpal.Models.PetModel;
@@ -33,70 +34,40 @@ import com.google.firebase.storage.StorageReference;
 public class Pets extends AppCompatActivity {
 
     private ConstraintLayout buttonAddPet;
+    private ProgressBar progressBar;
+    private GridView petGV;
 
-    private FirebaseAuth auth;
-    private FirebaseUser user;
-    private FirebaseDatabase db;
+    private FirebaseAuth auth;  // User authentication object
+    private FirebaseUser user;  // User data object
+    private FirebaseDatabase db;  // Database objects
     private DatabaseReference ref;
-    private DatabaseReference petsRef;
+    private DatabaseReference petsRef;  // Database reference
 
     // Firebase storage
-    private FirebaseStorage storage;
-    private StorageReference storageRef;
+    private FirebaseStorage storage;  // Instance DB file storage
+    private StorageReference storageRef;  // Reference of DB file storage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pets);
 
         buttonAddPet = findViewById(R.id.buttonAddPet);
+        petGV = findViewById(R.id.idGVpets);
+        progressBar = findViewById(R.id.progressBarPets);
+        progressBar.setVisibility(View.INVISIBLE);
 
         auth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance();
+        db = FirebaseDatabase.getInstance();  // Instance of database
         storage = FirebaseStorage.getInstance();
         user = auth.getCurrentUser();  // Current logged in user
+
+        // Retrieve pets from database
+        showPets();
 
         buttonAddPet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Pets.this, PetForm.class));
-            }
-        });
-
-
-        // -----------------
-        // | PETS GRIDVIEW |
-        // -----------------
-
-        GridView petGV;
-
-        petGV = findViewById(R.id.idGVpets);
-
-        petsRef = db.getReference().child("Users").child(user.getUid()).child("Pets");
-        petsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<PetModel> petModelArrayList = new ArrayList<PetModel>();
-
-                for (DataSnapshot petSnapshot : dataSnapshot.getChildren()) {
-                    // Access each pet item
-                    String petID = petSnapshot.getKey(); // Get the unique ID of the pet
-                    String petName = petSnapshot.child("pet_name").getValue(String.class); // Get the name of the pet
-                    String petDob = petSnapshot.child("petDOB").getValue(String.class);
-                    String petSpecies = petSnapshot.child("petSpecies").getValue(String.class);
-                    String petImage = petSnapshot.child("petImageUri").getValue(String.class);
-                    String petGender = petSnapshot.child("petGender").getValue(String.class);
-
-                    petModelArrayList.add(new PetModel(petID, petName, user.getUid().toString(), petImage, petDob, petSpecies, petGender));
-                }
-
-                PetAdapter adapter = new PetAdapter(getApplicationContext(), petModelArrayList);
-                petGV.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors while fetching data
-                Log.e("FirebaseError", "Error fetching pets: " + databaseError.getMessage());
             }
         });
 
@@ -129,6 +100,40 @@ public class Pets extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    private void showPets() {
+        progressBar.setVisibility(View.VISIBLE);
+        petsRef = db.getReference().child("Users").child(user.getUid()).child("Pets");
+        petsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<PetModel> petModelArrayList = new ArrayList<PetModel>();
+
+                for (DataSnapshot petSnapshot : dataSnapshot.getChildren()) {
+                    // Access each pet item
+                    String petID = petSnapshot.getKey(); // Get the unique ID of the pet
+                    String petName = petSnapshot.child("pet_name").getValue(String.class); // Get the name of the pet
+                    String petDob = petSnapshot.child("petDOB").getValue(String.class);
+                    String petSpecies = petSnapshot.child("petSpecies").getValue(String.class);
+                    String petImage = petSnapshot.child("petImageUri").getValue(String.class);
+                    String petGender = petSnapshot.child("petGender").getValue(String.class);
+
+                    petModelArrayList.add(new PetModel(petID, petName, user.getUid().toString(), petImage, petDob, petSpecies, petGender));
+                }
+
+                PetAdapter adapter = new PetAdapter(getApplicationContext(), petModelArrayList);
+                petGV.setAdapter(adapter);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors while fetching data
+                Log.e("FirebaseError", "Error fetching pets: " + databaseError.getMessage());
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

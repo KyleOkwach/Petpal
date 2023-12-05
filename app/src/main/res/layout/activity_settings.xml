@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
-                            android:id="@+id/imageView11"
+                            android:id="@+id/profileIV"
                             android:layout_width="140dp"
                             android:layout_height="140dp"
                             android:scaleType="centerCrop"
@@ -128,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Username"
+                android:text="Username not set"
                 android:textAlignment="center"
                 android:textColor="@color/text"
                 android:textSize="20sp" />

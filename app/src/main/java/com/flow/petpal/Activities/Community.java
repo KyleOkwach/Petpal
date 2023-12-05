@@ -7,23 +7,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.flow.petpal.Adapters.EventAdapter;
-import com.flow.petpal.Models.EventModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.flow.petpal.Adapters.FriendRequestsAdapter;
+import com.flow.petpal.Adapters.FriendsAdapter;
+import com.flow.petpal.Adapters.UsersAdapter;
+import com.flow.petpal.Models.UserModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.flow.petpal.R;
@@ -36,23 +32,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Community extends AppCompatActivity {
-
-    private ConstraintLayout buttonBack, buttonSetDate;
-    private EditText activityDateET, activityDescriptionET;
-    private ProgressBar submitting;
-    private RecyclerView activitiesRV;
-    private String petID;
-    private Calendar calendar;
+    
+    private ProgressBar progressBarCommunity, progressBarFriends, progressBarRequests;
+    private ConstraintLayout buttonCommunity, buttonFriends, buttonRequests;
+    private RecyclerView communityRV, friendsRV, requestsRV;
+    private TextView communityTV, friendsTV, requestsTV;
 
     // Firebase
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseDatabase db;
-    private DatabaseReference ref;
-    private  DatabaseReference nutritionRef;
+    private DatabaseReference userRef;
+    private  DatabaseReference usersRef;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -65,6 +59,91 @@ public class Community extends AppCompatActivity {
 
         // Set Home selected
         bottomNavigationView.setSelectedItemId(R.id.community);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        progressBarCommunity = findViewById(R.id.progressBar);
+        progressBarCommunity.setVisibility(View.INVISIBLE);
+
+        buttonCommunity = findViewById(R.id.buttonCommunity);
+        buttonFriends = findViewById(R.id.buttonFriends);
+        buttonRequests = findViewById(R.id.buttonRequests);
+
+        communityRV = findViewById(R.id.communityRV);
+        friendsRV = findViewById(R.id.friendsRV);
+        requestsRV = findViewById(R.id.requestsRV);
+        
+        friendsTV = findViewById(R.id.friendsTV);
+        communityTV = findViewById(R.id.communityTV);
+        requestsTV = findViewById(R.id.requestsTV);
+
+        // Change tabs
+        buttonCommunity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Change layout visibility
+                communityRV.setVisibility(View.VISIBLE);
+                friendsRV.setVisibility(View.GONE);
+                requestsRV.setVisibility(View.GONE);
+
+                // Change button backgrounds
+                buttonCommunity.setBackgroundResource(R.drawable.button_basic);
+                buttonFriends.setBackgroundResource(R.drawable.background_white);
+                buttonRequests.setBackgroundResource(R.drawable.background_white);
+
+                // Change color of button text
+                communityTV.setTextColor(getResources().getColor(R.color.secondary));
+                friendsTV.setTextColor(getResources().getColor(R.color.text));
+                requestsTV.setTextColor(getResources().getColor(R.color.text));
+
+                showUsers();
+            }
+        });
+
+        buttonFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Change layout visibility
+                communityRV.setVisibility(View.GONE);
+                friendsRV.setVisibility(View.VISIBLE);
+                requestsRV.setVisibility(View.GONE);
+
+                // Change button backgrounds
+                buttonCommunity.setBackgroundResource(R.drawable.background_white);
+                buttonFriends.setBackgroundResource(R.drawable.button_basic);
+                buttonRequests.setBackgroundResource(R.drawable.background_white);
+
+                // Change color of button text
+                communityTV.setTextColor(getResources().getColor(R.color.text));
+                friendsTV.setTextColor(getResources().getColor(R.color.secondary));
+                requestsTV.setTextColor(getResources().getColor(R.color.text));
+
+                showFriends();
+            }
+        });
+
+        buttonRequests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Change layout visibility
+                communityRV.setVisibility(View.GONE);
+                friendsRV.setVisibility(View.GONE);
+                requestsRV.setVisibility(View.VISIBLE);
+
+                // Change button backgrounds
+                buttonCommunity.setBackgroundResource(R.drawable.background_white);
+                buttonFriends.setBackgroundResource(R.drawable.background_white);
+                buttonRequests.setBackgroundResource(R.drawable.button_basic);
+                
+                // Change color of button text
+                communityTV.setTextColor(getResources().getColor(R.color.text));
+                friendsTV.setTextColor(getResources().getColor(R.color.text));
+                requestsTV.setTextColor(getResources().getColor(R.color.secondary));
+
+                showRequests();
+            }
+        });
 
         // Perform item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -91,85 +170,163 @@ public class Community extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         user = auth.getCurrentUser();
-        petID = getIntent().getStringExtra("PetID");
-
-        activityDateET = findViewById(R.id.date);
-        activityDescriptionET = findViewById(R.id.description);
-        activitiesRV = findViewById(R.id.activitiesRV);
-
-        submitting.setVisibility(View.INVISIBLE);
-
-        calendar = Calendar.getInstance();
-        activityDateET.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog();
-            }
-        });
-
-        // Populate nutritions list
-        shownutritionSchedule();
+        
+        showUsers();
     }
 
-    private void shownutritionSchedule() {
-        nutritionRef = db.getReference()
-                .child("Users")
-                .child(user.getUid())
-                .child("Pets")
-                .child(petID)
-                .child("Nutrition");
-        nutritionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void showUsers() {
+        progressBarCommunity.setVisibility(View.VISIBLE);  // Show progress bar
+
+        usersRef = db.getReference()
+                .child("Users");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<EventModel> eventModelArrayList = new ArrayList<EventModel>();
+                ArrayList<UserModel> usersModelArrayList = new ArrayList<UserModel>();
 
-                for (DataSnapshot petSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     // Access each pet item
-                    String nutritionID = petSnapshot.getKey();
-                    String nutritionDate = petSnapshot.child("eventDate").getValue(String.class);
-                    String nutritionDescription = petSnapshot.child("eventDescription").getValue(String.class);
+                    String userID = userSnapshot.getKey();
+                    String username = userSnapshot.child("userName").getValue(String.class);
+                    String firstName = userSnapshot.child("firstName").getValue(String.class);
+                    String lastName = userSnapshot.child("lastName").getValue(String.class);
+                    String imageUri = userSnapshot.child("imageUri").getValue(String.class);
 
-                    eventModelArrayList.add(new EventModel(nutritionID, nutritionDate, nutritionDescription, petID));
+                    if(userID != user.getUid()) {
+                        usersModelArrayList.add(new UserModel(userID, firstName, lastName, username, imageUri));
+                    }
                 }
 
-                EventAdapter eventAdapter = new EventAdapter(getApplicationContext(), eventModelArrayList);
+                UsersAdapter usersAdapter = new UsersAdapter(getApplicationContext(), usersModelArrayList);
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
                 // in below two lines we are setting layoutmanager and adapter to our recycler view.
-                activitiesRV.setLayoutManager(linearLayoutManager);
-                activitiesRV.setAdapter(eventAdapter);
+                communityRV.setLayoutManager(linearLayoutManager);
+                communityRV.setAdapter(usersAdapter);
+
+                progressBarCommunity.setVisibility(View.INVISIBLE);  // Hide progress bar
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors while fetching data
-                Log.e("FirebaseError", "Error fetching pets: " + databaseError.getMessage());
+                Log.e("FirebaseError", "Error fetching users: " + databaseError.getMessage());
+                progressBarCommunity.setVisibility(View.INVISIBLE);  // Hide progress bar
             }
         });
     }
 
-    private void showDatePickerDialog() {
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+    private void showRequests() {
+        progressBarCommunity.setVisibility(View.VISIBLE);  // Show progress bar
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        // Update the EditText field with the selected date
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        usersRef = db.getReference()
+                .child("Users")
+                .child(user.getUid())
+                .child("Friends")
+                .child("Pending");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int totalUsers = (int) dataSnapshot.getChildrenCount();
+                AtomicInteger usersFetched = new AtomicInteger(0);
+                ArrayList<UserModel> usersModelArrayList = new ArrayList<>();
 
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", getResources().getConfiguration().locale);
-                        activityDateET.setText(dateFormat.format(calendar.getTime()));
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    userRef = db.getReference("User").child(userSnapshot.getKey());
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // Fetch user data
+                            userRef = db.getReference("User")
+                                    .child(userSnapshot.getKey());
+                            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String userID = snapshot.getKey();
+                                    String username = snapshot.child("userName").getValue(String.class);
+                                    String firstName = snapshot.child("firstName").getValue(String.class);
+                                    String lastName = snapshot.child("lastName").getValue(String.class);
+                                    String imageUri = snapshot.child("imageUri").getValue(String.class);
+
+                                    if(userID != user.getUid()) {
+                                        usersModelArrayList.add(new UserModel(userID, firstName, lastName, username, imageUri));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e("FirebaseError", "Error fetching user: " + error.getMessage());
+                                }
+                            });
+                            // Check if all users are fetched and set the adapter
+                            usersFetched.getAndIncrement();
+                            if (usersFetched.get() == totalUsers) {
+                                FriendRequestsAdapter friendRequestsAdapter = new FriendRequestsAdapter(getApplicationContext(), usersModelArrayList);
+                                requestsRV.setAdapter(friendRequestsAdapter);
+                                progressBarCommunity.setVisibility(View.INVISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Handle cancellation
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors while fetching data
+            }
+        });
+
+
+    }
+
+    private void showFriends() {
+        progressBarCommunity.setVisibility(View.VISIBLE);  // Show progress bar
+
+        usersRef = db.getReference()
+                .child("Users")
+                .child(user.getUid())
+                .child("Friends");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<UserModel> usersModelArrayList = new ArrayList<UserModel>();
+
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    // Access each pet item
+                    String userID = userSnapshot.getKey();
+                    String username = userSnapshot.child("userName").getValue(String.class);
+                    String firstName = userSnapshot.child("firstName").getValue(String.class);
+                    String lastName = userSnapshot.child("lastName").getValue(String.class);
+                    String imageUri = userSnapshot.child("imageUri").getValue(String.class);
+
+                    if(userID != user.getUid()) {
+                        usersModelArrayList.add(new UserModel(userID, firstName, lastName, username, imageUri));
                     }
-                },
-                year, month, dayOfMonth);
+                }
 
-        datePickerDialog.show();
+                FriendsAdapter friendsAdapter = new FriendsAdapter(getApplicationContext(), usersModelArrayList);
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+
+                // in below two lines we are setting layoutmanager and adapter to our recycler view.
+                friendsRV.setLayoutManager(linearLayoutManager);
+                friendsRV.setAdapter(friendsAdapter);
+
+                progressBarCommunity.setVisibility(View.INVISIBLE);  // Hide progress bar
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors while fetching data
+                Log.e("FirebaseError", "Error fetching users: " + databaseError.getMessage());
+                progressBarCommunity.setVisibility(View.INVISIBLE);  // Hide progress bar
+            }
+        });
     }
 }

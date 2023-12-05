@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.flow.petpal.Adapters.PetAdapter;
@@ -28,8 +29,10 @@ import java.util.ArrayList;
 public class PetDialog extends AppCompatActivity {
 
     private ConstraintLayout buttonCancel;
+    private ProgressBar progressBar;
     private TextView modeTV;
     private String dialogMode;
+    private GridView petGV;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -54,8 +57,14 @@ public class PetDialog extends AppCompatActivity {
 
         buttonCancel = findViewById(R.id.buttonCancel);
         modeTV = findViewById(R.id.modeTV);
+        progressBar = findViewById(R.id.progressBarPets);
+        progressBar.setVisibility(View.INVISIBLE);
 
         modeTV.setText("Pet "+dialogMode);
+
+        petGV = findViewById(R.id.idGVpets);
+
+        showPets();
 
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,10 +72,10 @@ public class PetDialog extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
-        GridView petGV;
-
-        petGV = findViewById(R.id.idGVpets);
+    private void showPets() {
+        progressBar.setVisibility(View.VISIBLE);
         ArrayList<PetModel> petModelArrayList = new ArrayList<PetModel>();
 
         petsRef = db.getReference().child("Users").child(user.getUid()).child("Pets");
@@ -89,12 +98,14 @@ public class PetDialog extends AppCompatActivity {
 
                 PetAdapter adapter = new PetAdapter(getApplicationContext(), petModelArrayList);
                 petGV.setAdapter(adapter);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors while fetching data
                 Log.e("FirebaseError", "Error fetching pets: " + databaseError.getMessage());
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

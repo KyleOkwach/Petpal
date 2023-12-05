@@ -68,7 +68,7 @@ public class Signup extends AppCompatActivity {
         db = FirebaseDatabase.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                //.requestIdToken(getString(R.string.default_web_client_id))
+                // .requestIdToken(getString(R.string.default_web_client_id))
                 .requestIdToken("359412879965-oe41cdkraafu3j8ba6l700a8t3i48k7f.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
@@ -111,8 +111,6 @@ public class Signup extends AppCompatActivity {
                         signUp(email, pass);
                     }
                 }
-                loadSignUp.setVisibility(View.INVISIBLE);
-                buttonText.setVisibility(View.VISIBLE);
             }
         });
 
@@ -213,6 +211,9 @@ public class Signup extends AppCompatActivity {
                             Toast.makeText(Signup.this, task.getException().getLocalizedMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
+
+                        loadSignUp.setVisibility(View.INVISIBLE);
+                        buttonText.setVisibility(View.VISIBLE);
                     }
                 });
     }

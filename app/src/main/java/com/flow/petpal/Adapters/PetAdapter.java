@@ -61,13 +61,7 @@ public class PetAdapter extends ArrayAdapter<PetModel> {
         petTV.setText(petModel.getPet_name());
         speciesTV.setText(petModel.getPetSpecies());
 
-        // set background image
-        // Drawable backgroundDrawable = ContextCompat.getDrawable(this.getContext(), petModel.getImgid());
-
-        // petIV.setImageBitmap(getBitmapFromURL(petModel.getPetImageUri()));
-
         Glide.with(this.getContext())
-                // .load(Uri.parse(petModel.getPetImageUri()))
                 .load(petModel.getPetImageUri())
                 .placeholder(R.drawable.image_broken)
                 .error(R.drawable.image_broken)
